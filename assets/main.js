@@ -1,9 +1,7 @@
-// Uppdaterad och förbättrad main.js för Uppsägningskollen
-
-// Hantera kalkylatorns logik och förbättrad graf
+// Uppdaterad main.js med månadspåslag för Uppsägningskollen
 
 document.getElementById('calculator-form').addEventListener('submit', function(event) {
-  event.preventDefault(); // Stoppa formens standardbeteende
+  event.preventDefault();
 
   var salary = parseFloat(document.getElementById('salary').value);
   var years = parseFloat(document.getElementById('years').value);
@@ -14,11 +12,9 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     return;
   }
 
-  // Grundberäkning
   var baseMonths = Math.min(12, Math.floor(years / 2));
   var baseCompensation = baseMonths * salary;
 
-  // Faktorer beroende på kollektivavtal
   var collectiveFactor = 1;
   if (collective === 'yes') {
     collectiveFactor = 1.1;
@@ -26,12 +22,10 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     collectiveFactor = 1.05;
   }
 
-  // Beräkna de tre niverna
   var legalRight = baseCompensation * collectiveFactor;
-  var lowerNegotiation = legalRight * 1.2;
-  var higherNegotiation = legalRight * 1.5;
+  var lowerNegotiation = legalRight + (salary * 2); // +2 månader
+  var higherNegotiation = legalRight + (salary * 5); // +5 månader
 
-  // Visa resultaten
   document.getElementById('results').style.display = 'block';
   document.getElementById('graphic-summary').innerHTML = `
     <p><strong>Preliminär beräkning:</strong></p>
@@ -43,7 +37,6 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     <p><small>Observera att alla belopp är preliminära uppskattningar och inte utgör juridisk rådgivning.</small></p>
   `;
 
-  // Rendera grafen
   var ctx = document.getElementById('resultChart').getContext('2d');
   new Chart(ctx, {
     type: 'bar',
@@ -70,8 +63,6 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     }
   });
 });
-
-// Event Tracking direkt på "Visa resultat"-knappen
 
 document.querySelector('button[type="submit"]').addEventListener('click', function() {
   console.log("Visa resultat-knappen klickad! Skickar GA4-event...");
