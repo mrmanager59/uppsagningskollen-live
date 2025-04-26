@@ -1,4 +1,4 @@
-// Uppdaterad main.js med månadspåslag för Uppsägningskollen
+// Uppdaterad main.js med 'Minimibelopp' och mjukare färger
 
 document.getElementById('calculator-form').addEventListener('submit', function(event) {
   event.preventDefault();
@@ -30,7 +30,7 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
   document.getElementById('graphic-summary').innerHTML = `
     <p><strong>Preliminär beräkning:</strong></p>
     <ul>
-      <li><strong>Lagstadgad rätt:</strong> ${legalRight.toLocaleString('sv-SE')} SEK</li>
+      <li><strong>Minimibelopp:</strong> ${legalRight.toLocaleString('sv-SE')} SEK</li>
       <li><strong>Lägre förhandlingsmål:</strong> ${lowerNegotiation.toLocaleString('sv-SE')} SEK</li>
       <li><strong>Högre förhandlingsmål:</strong> ${higherNegotiation.toLocaleString('sv-SE')} SEK</li>
     </ul>
@@ -41,11 +41,11 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Lagstadgad rätt', 'Lägre förhandlingsmål', 'Högre förhandlingsmål'],
+      labels: ['Minimibelopp', 'Lägre förhandlingsmål', 'Högre förhandlingsmål'],
       datasets: [{
         label: 'Belopp (SEK)',
         data: [legalRight, lowerNegotiation, higherNegotiation],
-        backgroundColor: ['#4caf50', '#ff9800', '#f44336']
+        backgroundColor: ['#90caf9', '#a5d6a7', '#e0e0e0']
       }]
     },
     options: {
