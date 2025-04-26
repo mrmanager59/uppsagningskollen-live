@@ -1,58 +1,45 @@
+// Funktion för att hantera kalkylatorns logik
+document.getElementById('calculator-form').addEventListener('submit', function(event) {
+  event.preventDefault(); // Förhindra vanlig form-submit
 
-const form = document.getElementById('calculator-form');
-const results = document.getElementById('results');
-const graphicSummary = document.getElementById('graphic-summary');
-const ctx = document.getElementById('resultChart').getContext('2d');
-let chart; // Keep chart instance
+  var salary = parseFloat(document.getElementById('salary').value);
+  var years = parseFloat(document.getElementById('years').value);
+  var collective = document.getElementById('collective').value;
 
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  const salary = parseFloat(document.getElementById('salary').value);
-  const years = parseInt(document.getElementById('years').value);
-  const collective = document.getElementById('collective').value;
-
-  let noticeMonths;
-
-  if (collective === 'yes') {
-    noticeMonths = Math.min(6, Math.ceil(years / 2) + 1);
-  } else {
-    if (years < 2) noticeMonths = 1;
-    else if (years < 4) noticeMonths = 2;
-    else if (years < 6) noticeMonths = 3;
-    else if (years < 8) noticeMonths = 4;
-    else if (years < 10) noticeMonths = 5;
-    else noticeMonths = 6;
+  if (isNaN(salary) || isNaN(years)) {
+    alert('Fyll i alla fält korrekt.');
+    return;
   }
 
-  const legalCompensation = salary * noticeMonths;
+  var baseMonths = Math.min(12, Math.floor(years / 2));
+  var baseCompensation = baseMonths * salary;
 
-  let minExtraMonths, maxExtraMonths;
+  var negotiationFactor = 1;
   if (collective === 'yes') {
-    minExtraMonths = 3;
-    maxExtraMonths = 6;
-  } else {
-    minExtraMonths = 2;
-    maxExtraMonths = 4;
+    negotiationFactor = 1.2;
+  } else if (collective === 'unknown') {
+    negotiationFactor = 1.1;
   }
 
-  const minNegotiationTarget = legalCompensation + (salary * minExtraMonths);
-  const maxNegotiationTarget = legalCompensation + (salary * maxExtraMonths);
+  var totalCompensation = baseCompensation * negotiationFactor;
 
-  graphicSummary.innerHTML = `
-    <p><strong>Lagstadgad ersättning:</strong> ${legalCompensation.toLocaleString()} SEK</p>
-    <p><strong>Rimligt förhandlingsmål:</strong> ${minNegotiationTarget.toLocaleString()} – ${maxNegotiationTarget.toLocaleString()} SEK</p>
+  // Visa resultat
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('graphic-summary').innerHTML = `
+    <p><strong>Beräknad ersättning:</strong> ${totalCompensation.toLocaleString('sv-SE')} SEK</p>
+    <p><small>Observera att detta är en preliminär uppskattning och inte juridisk rådgivning.</small></p>
   `;
 
-  if (chart) chart.destroy();
-  chart = new Chart(ctx, {
+  // Skapa graf
+  var ctx = document.getElementById('resultChart').getContext('2d');
+  new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Lagstadgad rätt', 'Lägre förhandlingsmål', 'Högre förhandlingsmål'],
+      labels: ['Grundbelopp', 'Förhandlingsutrymme'],
       datasets: [{
         label: 'Belopp (SEK)',
-        data: [legalCompensation, minNegotiationTarget, maxNegotiationTarget],
-        backgroundColor: ['#0a9396', '#94d2bd', '#0077b6']
+        data: [baseCompensation, totalCompensation - baseCompensation],
+        backgroundColor: ['#4caf50', '#2196f3']
       }]
     },
     options: {
@@ -64,15 +51,18 @@ form.addEventListener('submit', function(event) {
       }
     }
   });
-
-  results.style.display = 'block';
 });
-// Event Tracking för "Visa resultat"-knappen
-document.getElementById('calculator-form').addEventListener('submit', function() {
+
+// Event Tracking direkt på knappen
+document.querySelector('button[type="submit"]').addEventListener('click', function() {
+  console.log("Visa resultat-knappen klickad! Skickar GA4-event...");
   if (typeof gtag === 'function') {
     gtag('event', 'klick_visa_resultat', {
       'event_category': 'Form',
       'event_label': 'Visa resultat-knapp'
     });
+  } else {
+    console.log("GA4 gtag är inte definierad");
   }
 });
+
