@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uppsägningskollen - Få koll på din rätt</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="content-wrapper">
+      <h1>Vet du vad du kan ha rätt till vid uppsägning?</h1>
+      <p>Få en preliminär och gratis bedömning på under 1 minut.</p>
+    </div>
+  </header>
+
+  <main class="content-wrapper">
+    <section class="how-it-works">
+      <h2>Så här fungerar det</h2>
+      <ul>
+        <li>1. Fyll i några enkla uppgifter</li>
+        <li>2. Se direkt din preliminära ersättning och möjliga förhandlingsmål</li>
+        <li>3. Få vägledning om nästa steg</li>
+      </ul>
+    </section>
+
+    <section class="value-prop">
+      <h2>Varför använda Uppsägningskollen?</h2>
+      <p>Baserat på svensk lag, kollektivavtal och praxis. Ingen registrering krävs för att få resultatet. Helt gratis och anonymt.</p>
+    </section>
+
+    <section class="calculator">
+      <h2>Få din preliminära bedömning</h2>
+      <p>Fyll i nedan – det tar mindre än 1 minut.</p>
+      <form id="calculator-form">
+        <label for="salary">Månadslön (SEK):</label><br>
+        <input type="number" id="salary" name="salary" required><br><br>
+
+        <label for="years">Antal år anställd:</label><br>
+        <input type="number" id="years" name="years" required><br><br>
+
+        <label for="collective">Har du kollektivavtal?</label><br>
+        <select id="collective" name="collective" required>
+          <option value="yes">Ja</option>
+          <option value="no">Nej</option>
+          <option value="unknown">Vet inte</option>
+        </select><br><br>
+
+        <button type="submit">Visa resultat</button>
+      </form>
+    </section>
+
+    <section class="results" id="results" style="display:none;">
+      <h2>Din preliminära bedömning</h2>
+      <div id="graphic-summary"></div>
+      <div class="chart-container">
+        <canvas id="resultChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <section class="newsletter">
+    <div class="content-wrapper">
+      <h2>Få en gratis rapport till din e-post</h2>
+      <p>Få en PDF med information om hur kalkylen baseras på LAS, kollektivavtal och praxis. Rapporten kan användas som stöd vid kontakt med arbetsgivare eller fackligt ombud.</p>
+      <form action="https://formspree.io/f/mnqepzvp" method="POST">
+        <input type="email" name="email" placeholder="Din e-postadress" required>
+        <button type="submit">Skicka mig rapporten</button>
+      </form>
+      <p class="disclaimer">Observera att alla beräkningar är preliminära och inte utgör juridisk rådgivning.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="content-wrapper">
+      <p>© 2025 Uppsägningskollen. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>
