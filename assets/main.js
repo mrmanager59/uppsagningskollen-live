@@ -1,6 +1,9 @@
-// Funktion för att hantera kalkylatorns logik
+// Uppdaterad och förbättrad main.js för Uppsägningskollen
+
+// Hantera kalkylatorns logik och förbättrad graf
+
 document.getElementById('calculator-form').addEventListener('submit', function(event) {
-  event.preventDefault(); // Förhindra vanlig form-submit
+  event.preventDefault(); // Stoppa formens standardbeteende
 
   var salary = parseFloat(document.getElementById('salary').value);
   var years = parseFloat(document.getElementById('years').value);
@@ -11,39 +14,54 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     return;
   }
 
+  // Grundberäkning
   var baseMonths = Math.min(12, Math.floor(years / 2));
   var baseCompensation = baseMonths * salary;
 
-  var negotiationFactor = 1;
+  // Faktorer beroende på kollektivavtal
+  var collectiveFactor = 1;
   if (collective === 'yes') {
-    negotiationFactor = 1.2;
+    collectiveFactor = 1.1;
   } else if (collective === 'unknown') {
-    negotiationFactor = 1.1;
+    collectiveFactor = 1.05;
   }
 
-  var totalCompensation = baseCompensation * negotiationFactor;
+  // Beräkna de tre niverna
+  var legalRight = baseCompensation * collectiveFactor;
+  var lowerNegotiation = legalRight * 1.2;
+  var higherNegotiation = legalRight * 1.5;
 
-  // Visa resultat
+  // Visa resultaten
   document.getElementById('results').style.display = 'block';
   document.getElementById('graphic-summary').innerHTML = `
-    <p><strong>Beräknad ersättning:</strong> ${totalCompensation.toLocaleString('sv-SE')} SEK</p>
-    <p><small>Observera att detta är en preliminär uppskattning och inte juridisk rådgivning.</small></p>
+    <p><strong>Preliminär beräkning:</strong></p>
+    <ul>
+      <li><strong>Lagstadgad rätt:</strong> ${legalRight.toLocaleString('sv-SE')} SEK</li>
+      <li><strong>Lägre förhandlingsmål:</strong> ${lowerNegotiation.toLocaleString('sv-SE')} SEK</li>
+      <li><strong>Högre förhandlingsmål:</strong> ${higherNegotiation.toLocaleString('sv-SE')} SEK</li>
+    </ul>
+    <p><small>Observera att alla belopp är preliminära uppskattningar och inte utgör juridisk rådgivning.</small></p>
   `;
 
-  // Skapa graf
+  // Rendera grafen
   var ctx = document.getElementById('resultChart').getContext('2d');
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Grundbelopp', 'Förhandlingsutrymme'],
+      labels: ['Lagstadgad rätt', 'Lägre förhandlingsmål', 'Högre förhandlingsmål'],
       datasets: [{
         label: 'Belopp (SEK)',
-        data: [baseCompensation, totalCompensation - baseCompensation],
-        backgroundColor: ['#4caf50', '#2196f3']
+        data: [legalRight, lowerNegotiation, higherNegotiation],
+        backgroundColor: ['#4caf50', '#ff9800', '#f44336']
       }]
     },
     options: {
       responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
       scales: {
         y: {
           beginAtZero: true
@@ -53,7 +71,8 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
   });
 });
 
-// Event Tracking direkt på knappen
+// Event Tracking direkt på "Visa resultat"-knappen
+
 document.querySelector('button[type="submit"]').addEventListener('click', function() {
   console.log("Visa resultat-knappen klickad! Skickar GA4-event...");
   if (typeof gtag === 'function') {
@@ -65,4 +84,3 @@ document.querySelector('button[type="submit"]').addEventListener('click', functi
     console.log("GA4 gtag är inte definierad");
   }
 });
-
