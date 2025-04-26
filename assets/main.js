@@ -67,3 +67,12 @@ form.addEventListener('submit', function(event) {
 
   results.style.display = 'block';
 });
+// Event Tracking för "Visa resultat"-knappen
+document.getElementById('calculator-form').addEventListener('submit', function() {
+  if (typeof gtag === 'function') {
+    gtag('event', 'klick_visa_resultat', {
+      'event_category': 'Form',
+      'event_label': 'Visa resultat-knapp'
+    });
+  }
+});
