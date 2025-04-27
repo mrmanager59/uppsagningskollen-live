@@ -1,94 +1,68 @@
-
 <!DOCTYPE html>
 <html lang="sv">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uppsägningskollen - Få koll på din rätt</title>
-  <link rel="stylesheet" href="assets/style.css">
-  
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4J3DRJBT8N"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-4J3DRJBT8N');
-  </script>
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Uppsägningskollen - Beräkna ditt utköp</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="content-wrapper">
-      <h1>Vet du vad du kan ha rätt till vid uppsägning?</h1>
-      <p>Få en preliminär och gratis bedömning på under 1 minut.</p>
+
+  <div class="calculator-container">
+    <h1>Beräkna ditt utköp</h1>
+    
+    <!-- Din kalkylator börjar här -->
+    <div id="calculator">
+      <!-- Din befintliga kalkylator-kod placeras här -->
     </div>
-  </header>
+    <!-- Din kalkylator slutar här -->
+    
+  </div>
 
-  <main class="content-wrapper">
-    <section class="how-it-works">
-      <h2>Så här fungerar det</h2>
-      <ul>
-        <li>1. Fyll i några enkla uppgifter</li>
-        <li>2. Se direkt din preliminära ersättning och möjliga förhandlingsmål</li>
-        <li>3. Få vägledning om nästa steg</li>
-      </ul>
-    </section>
+  <div class="email-signup-container">
+    <h2>Få din personliga guide</h2>
+    <p>Få en PDF-guide som visar hur du kan maximera din förhandlingsposition enligt LAS, kollektivavtal och praxis.</p>
 
-    <section class="value-prop">
-      <h2>Varför använda Uppsägningskollen?</h2>
-      <p>Baserat på svensk lag, kollektivavtal och praxis. Ingen registrering krävs för att få resultatet. Helt gratis och anonymt.</p>
-    </section>
+    <form id="emailForm" action="https://formspree.io/f/xeogovge" method="POST">
+      <label for="email">Din e-postadress:</label><br>
+      <input type="email" id="email" name="email" required><br><br>
+      <button type="submit">Skicka mig guiden</button>
+    </form>
 
-    <section class="calculator">
-      <h2>Få din preliminära bedömning</h2>
-      <p>Fyll i nedan – det tar mindre än 1 minut.</p>
-      <form id="calculator-form">
-        <label for="salary">Månadslön (SEK):</label><br>
-        <input type="number" id="salary" name="salary" required><br><br>
+    <p id="confirmationMessage" style="display:none; color: green; margin-top: 10px;">
+      Tack! Du skickas strax vidare till din guide...
+    </p>
 
-        <label for="years">Antal år anställd:</label><br>
-        <input type="number" id="years" name="years" required><br><br>
+    <p style="font-size: 12px; color: #666; margin-top: 20px;">
+      Observera att alla beräkningar är preliminära och inte utgör juridisk rådgivning.
+    </p>
+  </div>
 
-        <label for="collective">Har du kollektivavtal?</label><br>
-        <select id="collective" name="collective" required>
-          <option value="yes">Ja</option>
-          <option value="no">Nej</option>
-          <option value="unknown">Vet inte</option>
-        </select><br><br>
+  <script>
+    document.getElementById('emailForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const form = event.target;
+      const data = new FormData(form);
 
-        <button type="submit">Visa resultat</button>
-      </form>
-    </section>
+      fetch(form.action, {
+          method: form.method,
+          body: data,
+          headers: {
+              'Accept': 'application/json'
+          }
+      }).then(response => {
+          if (response.ok) {
+              document.getElementById('confirmationMessage').style.display = 'block';
+              setTimeout(function() {
+                  window.location.href = "thank-you.html";
+              }, 2000);
+          } else {
+              alert('Något gick fel. Testa igen!');
+          }
+      }).catch(error => {
+          alert('Något gick fel. Testa igen!');
+      });
+    });
+  </script>
 
-    <section class="results" id="results" style="display:none;">
-      <h2>Din preliminära bedömning</h2>
-      <div id="graphic-summary"></div>
-      <div class="chart-container">
-        <canvas id="resultChart"></canvas>
-      </div>
-    </section>
-  </main>
-
-  <section class="newsletter">
-    <div class="content-wrapper">
-      <h2>Få en gratis rapport till din e-post</h2>
-      <p>Få en PDF med information om hur kalkylen baseras på LAS, kollektivavtal och praxis. Rapporten kan användas som stöd vid kontakt med arbetsgivare eller fackligt ombud.</p>
-      <form action="https://formspree.io/f/mnqepzvp" method="POST">
-        <input type="email" name="email" placeholder="Din e-postadress" required>
-        <button type="submit">Skicka mig rapporten</button>
-      </form>
-      <p class="disclaimer">Observera att alla beräkningar är preliminära och inte utgör juridisk rådgivning.</p>
-    </div>
-  </section>
-
-  <footer>
-    <div class="content-wrapper">
-      <p>© 2025 Uppsägningskollen. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script src="assets/main.js"></script>
 </body>
 </html>
